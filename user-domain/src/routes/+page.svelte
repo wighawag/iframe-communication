@@ -3,6 +3,7 @@
 	import { PUBLIC_IFRAME_URL } from '$env/static/public';
 	const iframeURL = new URL(PUBLIC_IFRAME_URL);
 	const iframeOrigin = `${iframeURL.protocol}//${iframeURL.host}`;
+	let iframeSRC = $state(iframeURL.toString());
 
 	let iframe: HTMLIFrameElement;
 	let attributes: Record<string, string> = $state({});
@@ -12,6 +13,9 @@
 	onMount(() => {
 		const currentURL = new URL(location.href);
 		const searchParams = currentURL.searchParams;
+		if (searchParams.has('_d_eruda')) {
+			iframeSRC += '?_d_eruda';
+		}
 		attributes = Object.fromEntries(searchParams.entries());
 		delete attributes['_d_eruda'];
 		window.addEventListener('message', (event) => {
@@ -31,4 +35,4 @@
 <input type="text" bind:value={message} />
 <button onclick={() => save(message)}>set</button>
 <hr />
-<iframe {...attributes} bind:this={iframe} title="iframe" src={iframeURL.toString()}></iframe>
+<iframe {...attributes} bind:this={iframe} title="iframe" src={iframeSRC}></iframe>
