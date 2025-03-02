@@ -49,5 +49,14 @@
 {$data}
 <hr />
 
-<input type="text" bind:value={message} />
-<button onclick={() => data.set(message)}>set</button>
+<div>
+  <input type="text" bind:value={message} />
+  <button onclick={() => data.set(message)}>set</button>
+</div>
+
+<style>
+  div {
+    background-color: black;
+    color: white;
+  }
+</style>
