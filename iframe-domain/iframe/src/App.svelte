@@ -117,6 +117,8 @@
     <button onclick={requestAccess}>requestAccess</button>
   {:else if hasAccess !== "granted"}
     {hasAccess}
+    <br />
+    <button onclick={requestAccess}>requestAccess anyway</button>
   {/if}
   <hr />
   {$data}
