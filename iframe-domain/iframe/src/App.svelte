@@ -13,8 +13,64 @@
     | "granted"
     | "prompt"
     | "unknown"
-    | "error"
-    | "error2" = $state("loading");
+    | "error" = $state("loading");
+
+  async function handleStorageAccess(): Promise<
+    "denied" | "granted" | "prompt" | "unknown" | "error"
+  > {
+    // Check if Storage Access API is supported
+    if (!document.requestStorageAccess) {
+      // Storage Access API is not supported so best we can do is
+      // hope it's an older browser that doesn't block 3P cookies.
+      return "granted";
+    }
+
+    // Check if access has already been granted
+    if (await document.hasStorageAccess()) {
+      return "granted";
+    }
+
+    // Check the storage-access permission
+    // Wrap this in a try/catch for browsers that support the
+    // Storage Access API but not this permission check
+    // (e.g. Safari and earlier versions of Firefox).
+    let permission;
+    try {
+      permission = await navigator.permissions.query({
+        name: "storage-access",
+      });
+    } catch (error) {
+      // storage-access permission not supported. Assume no cookie access.
+      return "error";
+    }
+
+    if (permission) {
+      if (permission.state === "granted") {
+        // Permission has previously been granted so can just call
+        // requestStorageAccess() without a user interaction and
+        // it will resolve automatically.
+        try {
+          await document.requestStorageAccess();
+          return "granted";
+        } catch (error) {
+          // This shouldn't really fail if access is granted, but return false
+          // if it does.
+          return "error";
+        }
+      } else if (permission.state === "prompt") {
+        // Need to call requestStorageAccess() after a user interaction
+        // (potentially with a prompt). Can't do anything further here,
+        // so handle this in the click handler.
+        return "prompt";
+      } else if (permission.state === "denied") {
+        // Not used: see https://github.com/privacycg/storage-access/issues/149
+        return "denied";
+      }
+    }
+
+    // By default return false, though should really be caught by earlier tests.
+    return "error";
+  }
 
   onMount(() => {
     window.addEventListener("message", (message: MessageEvent) => {
@@ -25,24 +81,9 @@
       }
     });
 
-    try {
-      if (navigator.permissions) {
-        try {
-          navigator.permissions
-            .query({ name: "storage-access" })
-            .then((result) => {
-              hasAccess = result.state;
-            });
-        } catch (error) {
-          hasAccess = "error";
-        }
-      } else {
-        hasAccess = "unknown";
-      }
-    } catch (err) {
-      console.error(err);
-      hasAccess = "error2";
-    }
+    handleStorageAccess().then((access) => {
+      hasAccess = access;
+    });
   });
 
   async function requestAccess() {
