@@ -12,10 +12,12 @@
     "vite": "^6.1.1"
   },
   "scripts": {
-    "dev": "vite dev --host --port 4173",
+    "dev": "vite dev --host --port 8881",
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
   },
-  "dependencies": {}
+  "dependencies": {
+    "svelte-persisted-store": "^0.12.0"
+  }
 }
