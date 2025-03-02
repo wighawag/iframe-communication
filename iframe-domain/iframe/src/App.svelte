@@ -13,10 +13,18 @@
     | "granted"
     | "prompt"
     | "unknown"
-    | "error" = $state("loading");
+    | "error-not-supported"
+    | "error-granted-error"
+    | "error-all-fails" = $state("loading");
 
   async function handleStorageAccess(): Promise<
-    "denied" | "granted" | "prompt" | "unknown" | "error"
+    | "denied"
+    | "granted"
+    | "prompt"
+    | "unknown"
+    | "error-not-supported"
+    | "error-granted-error"
+    | "error-all-fails"
   > {
     // Check if Storage Access API is supported
     if (!document.requestStorageAccess) {
@@ -41,7 +49,7 @@
       });
     } catch (error) {
       // storage-access permission not supported. Assume no cookie access.
-      return "error";
+      return "error-not-supported";
     }
 
     if (permission) {
@@ -55,7 +63,7 @@
         } catch (error) {
           // This shouldn't really fail if access is granted, but return false
           // if it does.
-          return "error";
+          return "error-granted-error";
         }
       } else if (permission.state === "prompt") {
         // Need to call requestStorageAccess() after a user interaction
@@ -69,7 +77,7 @@
     }
 
     // By default return false, though should really be caught by earlier tests.
-    return "error";
+    return "error-all-fails";
   }
 
   onMount(() => {
