@@ -7,8 +7,14 @@
   });
 
   let message: string = $state("hello-from-iframe");
-  let hasAccess: "loading" | "denied" | "granted" | "prompt" =
-    $state("loading");
+  let hasAccess:
+    | "loading"
+    | "denied"
+    | "granted"
+    | "prompt"
+    | "unknown"
+    | "error" = $state("loading");
+
   onMount(() => {
     window.addEventListener("message", (message: MessageEvent) => {
       console.log(message.data);
@@ -18,9 +24,19 @@
       }
     });
 
-    navigator.permissions.query({ name: "storage-access" }).then((result) => {
-      hasAccess = result.state;
-    });
+    if (navigator.permissions) {
+      try {
+        navigator.permissions
+          .query({ name: "storage-access" })
+          .then((result) => {
+            hasAccess = result.state;
+          });
+      } catch (error) {
+        hasAccess = "error";
+      }
+    } else {
+      hasAccess = "unknown";
+    }
   });
 
   async function requestAccess() {
