@@ -7,12 +7,10 @@
   },
   "scripts": {
     "prepare": "set-defaults .vscode",
+    "build:user": "pnpm --filter user-domain... build",
+    "build:iframe": "pnpm --filter iframe-domain... build",
+    "build": "pnpm '/^build:.*/'",
     "start": "zellij-launcher --layout zellij.kdl a $npm_package_name || zellij --layout zellij.kdl -s $npm_package_name",
     "dev": "pnpm run --parallel -r dev"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
   }
 }
