@@ -55,8 +55,8 @@
 </div>
 
 <style>
-  div {
+  /* div {
     background-color: black;
     color: white;
-  }
+  } */
 </style>

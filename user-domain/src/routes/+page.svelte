@@ -13,6 +13,7 @@
 		const currentURL = new URL(location.href);
 		const searchParams = currentURL.searchParams;
 		attributes = Object.fromEntries(searchParams.entries());
+		delete attributes['_d_eruda'];
 		window.addEventListener('message', (event) => {
 			console.log(event.data);
 		});
