@@ -6,7 +6,7 @@
     syncTabs: true,
   });
 
-  let message: string = $state("");
+  let message: string = $state("hello-from-iframe");
   let hasAccess: "loading" | "denied" | "granted" | "prompt" =
     $state("loading");
   onMount(() => {
@@ -44,5 +44,5 @@
 {$data}
 <hr />
 
-<input type="text" bind:value={message} defaultValue="hello-from-iframe" />
+<input type="text" bind:value={message} />
 <button onclick={() => data.set(message)}>set</button>

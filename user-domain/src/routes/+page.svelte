@@ -7,7 +7,7 @@
 	let iframe: HTMLIFrameElement;
 	let attributes: Record<string, string> = $state({});
 
-	let message: string = $state('');
+	let message: string = $state('hello-from-user');
 
 	onMount(() => {
 		const currentURL = new URL(location.href);
@@ -27,7 +27,7 @@
 	}
 </script>
 
-<input type="text" bind:value={message} defaultValue="hello-from-user" />
+<input type="text" bind:value={message} />
 <button onclick={() => save(message)}>set</button>
 <hr />
 <iframe {...attributes} bind:this={iframe} title="iframe" src={iframeURL.toString()}></iframe>
