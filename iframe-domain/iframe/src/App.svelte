@@ -47,7 +47,8 @@
       permission = await navigator.permissions.query({
         name: "storage-access",
       });
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       // storage-access permission not supported. Assume no cookie access.
       return "error-not-supported";
     }
