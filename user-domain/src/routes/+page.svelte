@@ -16,7 +16,13 @@
 		if (searchParams.has('_d_eruda')) {
 			iframeSRC += '?_d_eruda';
 		}
+		console.log({ iframeSRC });
 		attributes = Object.fromEntries(searchParams.entries());
+
+		if (!attributes['sandbox']) {
+			attributes['sandbox'] =
+				'allow-scripts allow-same-origin allow-storage-access-by-user-activation';
+		}
 		delete attributes['_d_eruda'];
 		window.addEventListener('message', (event) => {
 			console.log(event.data);
@@ -32,7 +38,20 @@
 	}
 </script>
 
-<input type="text" bind:value={message} />
-<button onclick={() => save(message)}>set</button>
-<hr />
-<iframe {...attributes} bind:this={iframe} title="iframe" src={iframeSRC}></iframe>
+<div>
+	<input type="text" bind:value={message} />
+	<button onclick={() => save(message)}>set</button>
+	<hr />
+	<iframe {...attributes} bind:this={iframe} title="iframe" src={iframeSRC}></iframe>
+</div>
+
+<style>
+	div {
+		width: 100%;
+		height: 100%;
+	}
+	iframe {
+		width: 100%;
+		height: calc(100% - 50px);
+	}
+</style>

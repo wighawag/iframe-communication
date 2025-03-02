@@ -40,23 +40,23 @@
   }
 </script>
 
-{#if hasAccess === "prompt"}
-  <button onclick={requestAccess}>requestAccess</button>
-{:else if hasAccess !== "granted"}
-  {hasAccess}
-{/if}
-<hr />
-{$data}
-<hr />
-
 <div>
+  {#if hasAccess === "prompt"}
+    <button onclick={requestAccess}>requestAccess</button>
+  {:else if hasAccess !== "granted"}
+    {hasAccess}
+  {/if}
+  <hr />
+  {$data}
+  <hr />
+
   <input type="text" bind:value={message} />
   <button onclick={() => data.set(message)}>set</button>
 </div>
 
 <style>
-  /* div {
-    background-color: black;
-    color: white;
-  } */
+  div {
+    width: 100%;
+    height: 100%;
+  }
 </style>
