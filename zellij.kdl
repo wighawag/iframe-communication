@@ -2,11 +2,17 @@ layout {
 	pane {
 		pane {}
 		pane split_direction="vertical" {
-			pane name="IFRAME DOMAIN" command="bash"  {
-				args "-c" "pnpm run --filter ./iframe-domain dev; cd ./iframe-domain; ${SHELL-bash}"
-			}
+			
 			pane name="USER DOMAIN" command="bash"  {
 				args "-c" "pnpm run --filter ./user-domain dev; cd ./user-domain; ${SHELL-bash}"
+			}
+		}
+		pane split_direction="vertical" {
+			pane name="IFRAME DOMAIN" command="bash"  {
+				args "-c" "pnpm run --filter ./iframe-domain build:dev; cd ./iframe-domain; ${SHELL-bash}"
+			}
+			pane name="IFRAME DOMAIN" command="bash"  {
+				args "-c" "pnpm run --filter ./iframe-domain preview; cd ./iframe-domain; ${SHELL-bash}"
 			}
 		}
 		

@@ -6,6 +6,7 @@
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@tsconfig/svelte": "^5.0.4",
     "as-soon": "^0.0.11",
+    "esbuild": "^0.25.0",
     "svelte": "^5.19.6",
     "svelte-check": "^4.1.4",
     "typescript": "~5.7.2",
@@ -13,8 +14,9 @@
   },
   "scripts": {
     "dev": "vite dev --host --port 8881",
+    "build:dev": "as-soon -w service-worker.ts -w iframe/src -w popup/src pnpm build",
     "build": "vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --host --port 8881",
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
   },
   "dependencies": {

@@ -30,6 +30,9 @@ importers:
       as-soon:
         specifier: ^0.0.11
         version: 0.0.11
+      esbuild:
+        specifier: ^0.25.0
+        version: 0.25.0
       svelte:
         specifier: ^5.19.6
         version: 5.20.5

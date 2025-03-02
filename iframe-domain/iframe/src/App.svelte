@@ -81,18 +81,53 @@
     return "error-all-fails";
   }
 
+  let serviceWorker: ServiceWorker | null = $state(null);
+  const registerServiceWorker = async () => {
+    navigator.serviceWorker.addEventListener("message", (message) => {
+      console.log(message.data);
+      if (message.data.type == "pong") {
+        console.log("pong from service worker message event");
+      }
+    });
+
+    if ("serviceWorker" in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.register(
+          "/service-worker.js",
+          {
+            scope: "/",
+          }
+        );
+        if (registration.installing) {
+          console.log("Service worker installing");
+        } else if (registration.waiting) {
+          console.log("Service worker installed");
+        } else if (registration.active) {
+          console.log("Service worker active");
+          serviceWorker = registration.active;
+        }
+      } catch (error) {
+        console.error(`Registration failed with ${error}`);
+      }
+    }
+  };
+
   onMount(() => {
     window.addEventListener("message", (message: MessageEvent) => {
       console.log(message.data);
       if (message.data.type === "save") {
         console.log("save");
         data.set(message.data.data);
+      } else if (message.data.type == "pong") {
+        console.log("pong");
       }
     });
 
     handleStorageAccess().then((access) => {
       hasAccess = access;
     });
+
+    registerServiceWorker();
   });
 
   async function requestAccess() {
@@ -110,6 +145,50 @@
         }
       );
   }
+
+  const broadcast = new BroadcastChannel("channel-123");
+
+  broadcast.onmessage = (event) => {
+    if (event.data && event.data.type === "pong") {
+      console.log(`pong received`);
+    }
+  };
+
+  function pingViaPostMessage() {
+    // serviceWorker?.postMessage({ type: "ping" });
+    if (navigator.serviceWorker.controller) {
+      console.log(`pinging...`);
+      navigator.serviceWorker.controller.postMessage({ type: "ping" });
+    } else {
+      console.log(`no controller...`);
+    }
+  }
+
+  function pingViaBroadcastChannel() {
+    broadcast.postMessage({ type: "ping" });
+  }
+
+  const messageChannel = new MessageChannel();
+  messageChannel.port1.onmessage = (event) => {
+    if (event.data.type === "pong") {
+      console.log("pong received via channel");
+    }
+  };
+  let init = false;
+  function pingViaChannel() {
+    if (navigator.serviceWorker.controller) {
+      console.log(`pinging via channmel...`);
+      if (!init) {
+        init = true;
+        navigator.serviceWorker.controller.postMessage({ type: "init" }, [
+          messageChannel.port2,
+        ]);
+      }
+      messageChannel.port1.postMessage({ type: "ping" });
+    } else {
+      console.log(`no controller...`);
+    }
+  }
 </script>
 
 <div>
@@ -126,6 +205,10 @@
 
   <input type="text" bind:value={message} />
   <button onclick={() => data.set(message)}>set</button>
+  <hr />
+  <button onclick={pingViaPostMessage}>ping (postMessage)</button>
+  <button onclick={pingViaBroadcastChannel}>ping (broadcast)</button>
+  <button onclick={pingViaChannel}>ping (channel)</button>
 </div>
 
 <style>
