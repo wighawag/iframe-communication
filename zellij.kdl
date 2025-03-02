@@ -1,0 +1,15 @@
+layout {
+	pane {
+		pane {}
+		pane split_direction="vertical" {
+			pane name="IFRAME" command="bash"  {
+				args "-c" "pnpm run --filter ./iframe-domain dev; cd ./iframe-domain; ${SHELL-bash}"
+			}
+			pane name="IFRAME" command="bash"  {
+				args "-c" "pnpm run --filter ./user-domain dev; cd ./user-domain; ${SHELL-bash}"
+			}
+		}
+		
+	}
+
+}

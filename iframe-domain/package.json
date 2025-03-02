@@ -1,0 +1,21 @@
+{
+  "name": "iframe-domain",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "@tsconfig/svelte": "^5.0.4",
+    "as-soon": "^0.0.11",
+    "svelte": "^5.19.6",
+    "svelte-check": "^4.1.4",
+    "typescript": "~5.7.2",
+    "vite": "^6.1.1"
+  },
+  "scripts": {
+    "dev": "vite dev --host --port 4173",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
+  },
+  "dependencies": {}
+}
