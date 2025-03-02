@@ -5,10 +5,14 @@
 	const iframeOrigin = `${iframeURL.protocol}//${iframeURL.host}`;
 
 	let iframe: HTMLIFrameElement;
+	let attributes: Record<string, string>;
 
 	let message: string;
 
 	onMount(() => {
+		const currentURL = new URL(location.href);
+		const searchParams = currentURL.searchParams;
+		attributes = Object.fromEntries(searchParams.entries());
 		window.addEventListener('message', (event) => {
 			console.log(event.data);
 		});
@@ -26,4 +30,4 @@
 <input type="text" bind:value={message} defaultValue="hello-from-user" />
 <button onclick={() => save(message)}>set</button>
 <hr />
-<iframe bind:this={iframe} title="iframe" src={iframeURL.toString()}></iframe>
+<iframe {...attributes} bind:this={iframe} title="iframe" src={iframeURL.toString()}></iframe>
