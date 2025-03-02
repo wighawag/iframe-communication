@@ -6,8 +6,9 @@
     syncTabs: true,
   });
 
-  let message: string;
-
+  let message: string = $state("");
+  let hasAccess: "loading" | "denied" | "granted" | "prompt" =
+    $state("loading");
   onMount(() => {
     window.addEventListener("message", (message: MessageEvent) => {
       console.log(message.data);
@@ -16,9 +17,30 @@
         data.set(message.data.data);
       }
     });
+
+    navigator.permissions.query({ name: "storage-access" }).then((result) => {
+      hasAccess = result.state;
+    });
   });
+
+  function requestAccess() {
+    document.requestStorageAccess().then(
+      (handle) => {
+        hasAccess = "granted";
+      },
+      () => {
+        hasAccess = "denied";
+      }
+    );
+  }
 </script>
 
+{#if hasAccess === "prompt"}
+  <button>requestAccess</button>
+{:else if hasAccess !== "granted"}
+  {hasAccess}
+{/if}
+<hr />
 {$data}
 <hr />
 

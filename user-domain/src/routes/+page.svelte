@@ -5,9 +5,9 @@
 	const iframeOrigin = `${iframeURL.protocol}//${iframeURL.host}`;
 
 	let iframe: HTMLIFrameElement;
-	let attributes: Record<string, string>;
+	let attributes: Record<string, string> = $state({});
 
-	let message: string;
+	let message: string = $state('');
 
 	onMount(() => {
 		const currentURL = new URL(location.href);
