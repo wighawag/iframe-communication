@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	const iframeURL = new URL(`http://localhost:8881/iframe/`);
+	import { PUBLIC_IFRAME_URL } from '$env/static/public';
+	const iframeURL = new URL(PUBLIC_IFRAME_URL);
 	const iframeOrigin = `${iframeURL.protocol}//${iframeURL.host}`;
 
 	let iframe: HTMLIFrameElement;
