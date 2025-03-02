@@ -13,7 +13,8 @@
     | "granted"
     | "prompt"
     | "unknown"
-    | "error" = $state("loading");
+    | "error"
+    | "error2" = $state("loading");
 
   onMount(() => {
     window.addEventListener("message", (message: MessageEvent) => {
@@ -24,18 +25,23 @@
       }
     });
 
-    if (navigator.permissions) {
-      try {
-        navigator.permissions
-          .query({ name: "storage-access" })
-          .then((result) => {
-            hasAccess = result.state;
-          });
-      } catch (error) {
-        hasAccess = "error";
+    try {
+      if (navigator.permissions) {
+        try {
+          navigator.permissions
+            .query({ name: "storage-access" })
+            .then((result) => {
+              hasAccess = result.state;
+            });
+        } catch (error) {
+          hasAccess = "error";
+        }
+      } else {
+        hasAccess = "unknown";
       }
-    } else {
-      hasAccess = "unknown";
+    } catch (err) {
+      console.error(err);
+      hasAccess = "error2";
     }
   });
 
