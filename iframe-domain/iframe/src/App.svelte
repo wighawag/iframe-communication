@@ -24,15 +24,19 @@
   });
 
   async function requestAccess() {
-    document.requestStorageAccess().then(
-      (handle) => {
-        console.log({ handle });
-        hasAccess = "granted";
-      },
-      () => {
-        hasAccess = "denied";
-      }
-    );
+    (document as any)
+      .requestStorageAccess({
+        localStorage: true,
+      })
+      .then(
+        (handle: any) => {
+          console.log({ handle });
+          hasAccess = "granted";
+        },
+        () => {
+          hasAccess = "denied";
+        }
+      );
   }
 </script>
 
