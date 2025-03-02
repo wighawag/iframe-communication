@@ -23,9 +23,10 @@
     });
   });
 
-  function requestAccess() {
+  async function requestAccess() {
     document.requestStorageAccess().then(
       (handle) => {
+        console.log({ handle });
         hasAccess = "granted";
       },
       () => {
@@ -36,7 +37,7 @@
 </script>
 
 {#if hasAccess === "prompt"}
-  <button>requestAccess</button>
+  <button onclick={requestAccess}>requestAccess</button>
 {:else if hasAccess !== "granted"}
   {hasAccess}
 {/if}
